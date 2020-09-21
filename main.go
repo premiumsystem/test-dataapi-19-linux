@@ -17,7 +17,7 @@ func main() {
 	}
 	defer db.Logout()
 	fmt.Println(time.Now())
-	for i := 0; i < 300; i++ {
+	for i := 0; i < 2000; i++ {
 		resp, err := db.GetAllFrom("sudde")
 		if err != nil {
 			log.Fatal(err)
