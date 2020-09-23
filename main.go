@@ -6,44 +6,49 @@ import (
 	"sync"
 	"time"
 
-	"github.com/johansundell/mark-gantt/fmsdata"
+	"github.com/johansundell/fms-data-api/fmsdata"
 )
 
-var db fmsdata.DataBase
-
 func main() {
-	db = fmsdata.NewDataBase("https://fms1.sudde.eu", "sudde", "admin", "Onsdag5")
+	// Set the login info to our database
+	db := fmsdata.NewDataBase("https://fms1.sudde.eu", "sudde", "admin", "Onsdag5")
+	// Start a new session to the database, abort on fail
 	if err := db.Login(); err != nil {
 		log.Fatal(err)
 	}
+	// Wait until this functions ends before logout
 	defer db.Logout()
+	// Print the current time
 	fmt.Println(time.Now())
+	// Get a waitgroup so we can handle new routines start up and end to keep track of them
 	wg := sync.WaitGroup{}
+	// Make a channel array of a fixed size so we can keep track of how many we can run at the same time
+	// When all channels in this aray are filled, the loop below will wait until one is set free ;)
 	ws := make(chan struct{}, 100)
-	for i := 0; i < 25000; i++ {
-		/*resp, err := db.GetAllFrom("sudde")
-		if err != nil {
-			log.Fatal(err)
-		}
-		_ = resp*/
-		//fmt.Println(string(resp))
-
-		// Get them all at once
+	// Loop over and start requests
+	for i := 0; i < 300; i++ {
+		// Add one to our waitgroup
 		wg.Add(1)
+		// Init our dummy struct
 		ws <- struct{}{}
+		// Start a new routine running this function
 		go func(n int, w chan struct{}, wg *sync.WaitGroup) {
+			// Wait until this function are done before removing one from our waitgroup
 			defer wg.Done()
+			// Get the data from FileMaker and print the error on fail
 			resp, err := db.GetAllFrom("sudde")
 			if err != nil {
-				//log.Fatal(err)
 				fmt.Println(err)
 			}
-			//fmt.Println(n)
+			// We don't really care about the data we got
 			_ = resp
+			// Free the channel so it can be used again
 			<-w
 		}(i, ws, &wg)
 
 	}
+	// Wait until all routines in our waitgroup are done
 	wg.Wait()
+	// Print the current time
 	fmt.Println(time.Now())
 }
