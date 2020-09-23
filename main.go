@@ -11,7 +11,7 @@ import (
 
 func main() {
 	// Set the login info to our database
-	db := fmsdata.NewDataBase("https://fms1.sudde.eu", "sudde", "admin", "Onsdag5")
+	db := fmsdata.NewDataBase(settings.Host, settings.Filename, settings.User, settings.Pass)
 	// Start a new session to the database, abort on fail
 	if err := db.Login(); err != nil {
 		log.Fatal(err)
@@ -24,9 +24,9 @@ func main() {
 	wg := sync.WaitGroup{}
 	// Make a channel array of a fixed size so we can keep track of how many we can run at the same time
 	// When all channels in this aray are filled, the loop below will wait until one is set free ;)
-	ws := make(chan struct{}, 100)
+	ws := make(chan struct{}, settings.NoOfConcurret)
 	// Loop over and start requests
-	for i := 0; i < 300; i++ {
+	for i := 0; i < settings.NoOfRequest; i++ {
 		// Add one to our waitgroup
 		wg.Add(1)
 		// Init our dummy struct
