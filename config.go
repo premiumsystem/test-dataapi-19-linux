@@ -16,6 +16,7 @@ type appSettings struct {
 	Pass          string `json:"pass"`
 	NoOfRequest   int    `json:"no_of_request"`
 	NoOfConcurret int    `json:"no_of_conccurent"`
+	ShowDone      bool   `json:"show_done"`
 }
 
 // The filename of our settings file
