@@ -4,7 +4,7 @@
 
 GHACCOUNT := johansundell
 NAME := test-dataapi-19-linux
-VERSION := v1.0.0
+VERSION := v1.0.1
 
 build:
 	go build -ldflags "-X main.Version=$(VERSION)"
