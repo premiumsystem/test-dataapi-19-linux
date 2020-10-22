@@ -12,6 +12,7 @@ import (
 type appSettings struct {
 	Host          string `json:"host"`
 	Filename      string `json:"filename"`
+	Layout        string `json:"layout"`
 	User          string `json:"user"`
 	Pass          string `json:"pass"`
 	NoOfRequest   int    `json:"no_of_request"`

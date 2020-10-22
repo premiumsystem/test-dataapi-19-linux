@@ -10,10 +10,11 @@ import (
 var wg, wg2 sync.WaitGroup
 
 type Job struct {
-	Id     int
-	Work   string
-	Result []byte
-	err    error
+	Id       int
+	WorkerId int
+	Work     string
+	Result   []byte
+	err      error
 }
 
 func produce(jobs chan<- *Job) {
@@ -28,8 +29,8 @@ func consume(id int, jobs <-chan *Job, results chan<- *Job) {
 	defer wg.Done()
 	// Do work here
 	for job := range jobs {
-		resp, err := makeCallToFms("sudde")
-		job.Result, job.err = resp, err
+		resp, err := makeCallToFms(settings.Layout)
+		job.Result, job.err, job.WorkerId = resp, err, id
 		results <- job
 	}
 }
@@ -55,7 +56,7 @@ func analyze(results <-chan *Job) {
 			fmt.Println("error", job.Id, job.err)
 		} else {
 			if settings.ShowDone {
-				fmt.Println("job", job.Id, "done")
+				fmt.Println("job", job.Id, "done, by worker:", job.WorkerId)
 			}
 		}
 	}
