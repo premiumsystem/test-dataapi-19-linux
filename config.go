@@ -18,6 +18,7 @@ type appSettings struct {
 	NoOfRequest   int    `json:"no_of_request"`
 	NoOfConcurret int    `json:"no_of_conccurent"`
 	ShowDone      bool   `json:"show_done"`
+	MaxToGet      int    `json:"max_to_get_from_filemaker"`
 }
 
 // The filename of our settings file

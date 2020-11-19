@@ -42,7 +42,7 @@ func makeCallToFms(layout string) ([]byte, error) {
 		return nil, err
 	}
 	// Get the data from a layout
-	resp, err := db.GetAllFrom(layout)
+	resp, err := db.GetAllFromWithMax(layout, settings.MaxToGet)
 	// Logout from filemaker
 	db.Logout()
 	return resp, err
